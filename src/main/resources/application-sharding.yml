@@ -1,0 +1,49 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.115.133:3306/ds0
+        username: hjy
+        password: 123456
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.115.133:3306/ds1
+        username: hjy
+        password: 123456
+    sharding:
+      tables:
+        t_order:
+          actual-data-nodes: ds$->{0..1}.t_order$->{0..1}
+#          database-strategy:
+#            inline:
+#              sharding-column: user_id
+#              algorithm-expression: ds$->{0}
+          table-strategy:
+            inline:
+              sharding-column: user_id
+              algorithm-expression: t_order$->{user_id % 2}
+        t_order_item:
+          actual-data-nodes: ds$->{0..1}.t_order_item$->{0..1}
+          table-strategy:
+            hint:
+              algorithmClassName: com.hujy.demo.hint.HintSharding
+          key-generator:
+            column: item_id
+            type: SNOWFLAKE
+      binding-tables: t_order,t_order_item
+      ## 配置广播表：以广播的形式保存（如果只涉及查询的话可以不配置，会随机取一个数据源）
+      broadcast-tables[0]: t_config
+
+      default-database-strategy:
+        inline:
+          sharding-column: order_id
+          algorithm-expression: ds$->{order_id % 2}
+    props:
+      sql:
+        show: true
+
+
