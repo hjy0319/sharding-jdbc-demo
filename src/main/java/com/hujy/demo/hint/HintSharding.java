@@ -14,6 +14,14 @@ import java.util.Collection;
  * @date 2019-09-19 19:25
  */
 public class HintSharding implements HintShardingAlgorithm<Integer> {
+    /**
+     *
+     * @author hujy
+     * @date 2019-09-22 12:23
+     * @param availableTargetNames 分片表名的集合
+     * @param hintShardingValue 分片键集合
+     * @return java.util.Collection<java.lang.String>
+     */
     @Override
     public Collection<String> doSharding(Collection<String> availableTargetNames, HintShardingValue<Integer> hintShardingValue) {
         Collection<String> result = new ArrayList<>();

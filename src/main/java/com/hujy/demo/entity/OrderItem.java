@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 /**
  * Description
  *
@@ -15,9 +17,14 @@ import lombok.ToString;
 @Setter
 @ToString
 public class OrderItem {
+
     private Long itemId;
 
     private Integer orderId;
 
     private String remark;
+
+    private Date createTime;
+
+    private Date lastModifyTime;
 }

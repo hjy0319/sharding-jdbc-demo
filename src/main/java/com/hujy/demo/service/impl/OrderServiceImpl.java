@@ -40,20 +40,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Integer saveOrderItem(OrderItem orderItem, Integer userId) {
         try (HintManager hintManager = HintManager.getInstance()) {
-            hintManager.addTableShardingValue("t_order_item", userId);
+            hintManager.addDatabaseShardingValue("t_order_item", userId);
             return orderItemMapper.save(orderItem);
         }
     }
 
     @Override
-    public Order selectByUserId(Integer userId) {
-        return orderMapper.selectByUserId(userId);
+    public Order selectBySharding(Integer userId, Integer orderId) {
+        return orderMapper.selectBySharding(userId, orderId);
     }
 
     @Override
     public List<Order> selectOrderJoinOrderItem(Integer userId, Integer orderId) {
         try (HintManager hintManager = HintManager.getInstance()) {
-            hintManager.addTableShardingValue("t_order_item", userId);
+            hintManager.addDatabaseShardingValue("t_order_item", userId);
             return orderMapper.selectOrderJoinOrderItem(userId, orderId);
         }
     }

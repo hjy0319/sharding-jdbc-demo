@@ -29,26 +29,22 @@ public class ShardingJdbcDemoApplicationTests {
      */
     @Test
     public void testSaveOrder() {
-
         for (int i = 0; i < 10; i++) {
             Integer orderId = 1000 + i;
             Integer userId = 10 + i;
 
             Order o = new Order();
             o.setOrderId(orderId);
-
             o.setUserId(userId);
             o.setConfigId(i);
             o.setRemark("save.order");
             orderService.saveOrder(o);
-
 
             OrderItem oi = new OrderItem();
             oi.setOrderId(orderId);
             oi.setRemark("save.orderItem");
             orderService.saveOrderItem(oi, userId);
         }
-
     }
 
     /**
@@ -62,11 +58,13 @@ public class ShardingJdbcDemoApplicationTests {
     @Test
     public void testSelectByUserId() {
         Integer userId = 12;
-        Order o1 = orderService.selectByUserId(userId);
+        Integer orderId = 1002;
+        Order o1 = orderService.selectBySharding(userId, orderId);
         System.out.println(o1);
 
-        userId = 16;
-        Order o2 = orderService.selectByUserId(userId);
+        userId = 17;
+        orderId = 1007;
+        Order o2 = orderService.selectBySharding(userId, orderId);
         System.out.println(o2);
 
     }
@@ -134,7 +132,7 @@ public class ShardingJdbcDemoApplicationTests {
      * @date 2019-09-20 11:23
      */
     @Test
-    public void testQueryConfig() {
+    public void testSelectConfig() {
         Config config1 = orderService.selectConfig(5);
         System.out.println(config1);
 

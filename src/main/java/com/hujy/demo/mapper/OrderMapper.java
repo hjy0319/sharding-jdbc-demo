@@ -20,8 +20,9 @@ public interface OrderMapper {
     @Insert("insert into t_order(order_id,user_id,config_id,remark) values(#{orderId},#{userId},#{configId},#{remark})")
     Integer save(Order order);
 
-    @Select("select order_id orderId, user_id userId, config_id configId, remark from t_order  where user_id = #{userId}")
-    Order selectByUserId(Integer userId);
+    @Select("select order_id orderId, user_id userId, config_id configId, remark from t_order  " +
+            "where user_id = #{userId} and order_id = #{orderId}")
+    Order selectBySharding(Integer userId, Integer orderId);
 
     @Select("select o.order_id orderId, o.user_id userId, o.config_id configId, o.remark from " +
             "t_order o inner join t_order_item i on o.order_id = i.order_id " +

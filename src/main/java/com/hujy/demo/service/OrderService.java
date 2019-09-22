@@ -18,7 +18,7 @@ public interface OrderService {
 
     Integer saveOrderItem(OrderItem orderItem, Integer userId);
 
-    Order selectByUserId(Integer userId);
+    Order selectBySharding(Integer userId, Integer orderId);
 
     List<Order> selectOrderJoinOrderItem(Integer userId, Integer orderId);
 

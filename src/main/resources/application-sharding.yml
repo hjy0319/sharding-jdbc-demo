@@ -18,32 +18,40 @@ spring:
       tables:
         t_order:
           actual-data-nodes: ds$->{0..1}.t_order$->{0..1}
-#          database-strategy:
-#            inline:
-#              sharding-column: user_id
-#              algorithm-expression: ds$->{0}
-          table-strategy:
+          ## 指定分库规则
+          database-strategy:
             inline:
               sharding-column: user_id
-              algorithm-expression: t_order$->{user_id % 2}
+              algorithm-expression: ds$->{user_id % 2}
+          ## 指定分表规则
+          table-strategy:
+            inline:
+              sharding-column: order_id
+              algorithm-expression: t_order$->{order_id % 2}
+
         t_order_item:
           actual-data-nodes: ds$->{0..1}.t_order_item$->{0..1}
-          table-strategy:
+          ## 通过hint方式自定义分库规则
+          database-strategy:
             hint:
               algorithmClassName: com.hujy.demo.hint.HintSharding
+          ## 指定分表规则
+          table-strategy:
+            inline:
+              sharding-column: order_id
+              algorithm-expression: t_order_item$->{order_id % 2}
+          ## 生成分布式主键
           key-generator:
             column: item_id
             type: SNOWFLAKE
-      binding-tables: t_order,t_order_item
-      ## 配置广播表：以广播的形式保存（如果只涉及查询的话可以不配置，会随机取一个数据源）
-      broadcast-tables[0]: t_config
 
-      default-database-strategy:
-        inline:
-          sharding-column: order_id
-          algorithm-expression: ds$->{order_id % 2}
+      ## 绑定主表与子表，避免关联查询导致的全数据源路由
+      binding-tables: t_order,t_order_item
+
+      ## 配置广播表：以广播的形式保存（如果只涉及查询的话可以不配置，会随机取一个数据源）
+      broadcast-tables: t_config
+
+    ## 打印sql
     props:
       sql:
         show: true
-
-
